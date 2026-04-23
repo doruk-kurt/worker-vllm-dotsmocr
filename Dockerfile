@@ -17,13 +17,16 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python3 -m pip install --upgrade -r /requirements.txt
 
 # Setup for Option 2: Building the Image with the Model included
-ARG MODEL_NAME=""
+ARG MODEL_NAME="rednote-hilab/dots.mocr"
 ARG TOKENIZER_NAME=""
-ARG BASE_PATH="/runpod-volume"
+ARG BASE_PATH="/models"
 ARG QUANTIZATION=""
 ARG MODEL_REVISION=""
 ARG TOKENIZER_REVISION=""
 ARG VLLM_NIGHTLY="false"
+ARG TRUST_REMOTE_CODE="true"
+ARG CHAT_TEMPLATE_CONTENT_FORMAT="string"
+ARG OPENAI_SERVED_MODEL_NAME_OVERRIDE="dotsmocr"
 
 ENV MODEL_NAME=$MODEL_NAME \
     MODEL_REVISION=$MODEL_REVISION \
@@ -31,6 +34,9 @@ ENV MODEL_NAME=$MODEL_NAME \
     TOKENIZER_REVISION=$TOKENIZER_REVISION \
     BASE_PATH=$BASE_PATH \
     QUANTIZATION=$QUANTIZATION \
+    TRUST_REMOTE_CODE=$TRUST_REMOTE_CODE \
+    CHAT_TEMPLATE_CONTENT_FORMAT=$CHAT_TEMPLATE_CONTENT_FORMAT \
+    OPENAI_SERVED_MODEL_NAME_OVERRIDE=$OPENAI_SERVED_MODEL_NAME_OVERRIDE \
     HF_DATASETS_CACHE="${BASE_PATH}/huggingface-cache/datasets" \
     HUGGINGFACE_HUB_CACHE="${BASE_PATH}/huggingface-cache/hub" \
     HF_HOME="${BASE_PATH}/huggingface-cache/hub" \

@@ -73,7 +73,9 @@ For the complete list of all available environment variables, examples, and deta
 
 ## Option 2: Build Docker Image with Model Inside
 
-To build an image with the model baked in, you must specify the following docker arguments when building the image.
+This repository now defaults to baking in `rednote-hilab/dots.mocr`. A plain `docker build` will produce an image with dotsmocr preloaded and served as `dotsmocr`.
+
+You can still override the baked model by passing docker build arguments.
 
 ### Prerequisites
 
@@ -81,20 +83,28 @@ To build an image with the model baked in, you must specify the following docker
 
 ### Arguments
 
-- **Required**
-  - `MODEL_NAME`
 - **Optional**
+  - `MODEL_NAME`: Model repository to bake into the image. Defaults to `rednote-hilab/dots.mocr`.
   - `MODEL_REVISION`: Model revision to load (default: `main`).
-  - `BASE_PATH`: Storage directory where huggingface cache and model will be located. (default: `/runpod-volume`, which will utilize network storage if you attach it or create a local directory within the image if you don't. If your intention is to bake the model into the image, you should set this to something like `/models` to make sure there are no issues if you were to accidentally attach network storage.)
+  - `BASE_PATH`: Storage directory where huggingface cache and model will be located. Defaults to `/models` in this repo so the baked weights live inside the image filesystem.
   - `QUANTIZATION`
   - `WORKER_CUDA_VERSION`: `12.1.0` (`12.1.0` is recommended for optimal performance).
   - `TOKENIZER_NAME`: Tokenizer repository if you would like to use a different tokenizer than the one that comes with the model. (default: `None`, which uses the model's tokenizer)
   - `TOKENIZER_REVISION`: Tokenizer revision to load (default: `main`).
+  - `TRUST_REMOTE_CODE`: Defaults to `true` for dotsmocr.
+  - `CHAT_TEMPLATE_CONTENT_FORMAT`: Defaults to `string` for dotsmocr.
+  - `OPENAI_SERVED_MODEL_NAME_OVERRIDE`: Defaults to `dotsmocr`.
   - `VLLM_NIGHTLY`: Set to `true` to replace the pinned vLLM release with the latest nightly build and the latest `transformers` from source. Useful for testing unreleased vLLM features. (default: `false`)
 
 For the remaining settings, you may apply them as environment variables when running the container. Supported environment variables are listed in the [Environment Variables](#environment-variables) section.
 
-### Example: Building an image with OpenChat-3.5
+### Example: Building the default dotsmocr image
+
+```bash
+docker build -t username/image:tag .
+```
+
+### Example: Overriding the baked model
 
 ```bash
 docker build -t username/image:tag --build-arg MODEL_NAME="openchat/openchat_3.5" --build-arg BASE_PATH="/models" .

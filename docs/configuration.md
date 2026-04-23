@@ -185,7 +185,11 @@ These variables are used when building custom Docker images with models baked in
 
 | Variable              | Default          | Type  | Description                                       |
 | --------------------- | ---------------- | ----- | ------------------------------------------------- |
-| `BASE_PATH`           | `/runpod-volume` | `str` | Storage directory for huggingface cache and model |
+| `MODEL_NAME`          | `rednote-hilab/dots.mocr` | `str` | Model repository baked into the image by default |
+| `BASE_PATH`           | `/models`        | `str` | Storage directory for huggingface cache and model |
+| `TRUST_REMOTE_CODE`   | `true`           | `bool` | Enables dotsmocr custom code when baking the model |
+| `CHAT_TEMPLATE_CONTENT_FORMAT` | `string` | `str` | Content format used by dotsmocr in vLLM |
+| `OPENAI_SERVED_MODEL_NAME_OVERRIDE` | `dotsmocr` | `str` | Stable OpenAI model name exposed by the baked image |
 | `WORKER_CUDA_VERSION` | `12.1.0`         | `str` | CUDA version for the worker image                 |
 
 ## Deprecated Variables

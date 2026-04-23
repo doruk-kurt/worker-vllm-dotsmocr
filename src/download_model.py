@@ -9,6 +9,7 @@ from utils import timer_decorator
 BASE_DIR = "/" 
 TOKENIZER_PATTERNS = [["*.json", "tokenizer*"]]
 MODEL_PATTERNS = [["*.safetensors"], ["*.bin"], ["*.pt"]]
+CUSTOM_CODE_PATTERNS = ["*.py"]
 
 def setup_env():
     if os.getenv("TESTING_DOWNLOAD") == "1":
@@ -27,6 +28,8 @@ def setup_env():
 def download(name, revision, type, cache_dir):
     if type == "model":
         pattern_sets = [model_pattern + TOKENIZER_PATTERNS[0] for model_pattern in MODEL_PATTERNS]
+        if os.getenv("TRUST_REMOTE_CODE", "").lower() in {"1", "true", "yes", "on"}:
+            pattern_sets = [pattern_set + CUSTOM_CODE_PATTERNS for pattern_set in pattern_sets]
     elif type == "tokenizer":
         pattern_sets = TOKENIZER_PATTERNS
     else:
